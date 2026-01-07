@@ -1,0 +1,17 @@
+/**
+ * @swagger
+ * tags:
+ *   - name: user
+ *     description: API untuk user
+ */
+
+/**
+ * @swagger
+ * /user/example:
+ *   get:
+ *     summary: Contoh endpoint
+ *     tags: [user]
+ *     responses:
+ *       200:
+ *         description: Example Berhasil
+ */

@@ -1,0 +1,4 @@
+### Test endpoint user
+GET http://127.0.0.1:5380/user/example
+Content-Type: application/json
+Accept: application/json
