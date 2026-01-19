@@ -1,0 +1,44 @@
+/**
+ * @swagger
+ * tags:
+ *   - name: laporan
+ *     description: API untuk laporan
+ */
+
+/**
+ * @swagger
+ * /rekap/get-data/{page}/{rows}:
+ *   post:
+ *     summary: Mendapatkan jenis kendaraan dalam bentuk datatable
+ *     tags: [laporan]
+ *     parameters:
+ *       - in: path
+ *         name: page
+ *         required: true
+ *         schema:
+ *           type: integer
+ *       - in: path
+ *         name: rows
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: false
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               q:
+ *                 type: string
+ *               sort:
+ *                 type: object
+ *                 properties:
+ *                      kolom:
+ *                          type: string
+ *                      direction:
+ *                          type: string
+ *     responses:
+ *       200:
+ *         description: Example Berhasil
+ */

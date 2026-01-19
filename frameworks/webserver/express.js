@@ -4,6 +4,8 @@ import bodyParser from "body-parser";
 import helmet from "helmet";
 import cors from "cors";
 import config from "../../config/config.js";
+import express from "express";
+import path from "path";
 
 export default function expressConfig(app) {
   const corsOptions = {
@@ -65,6 +67,11 @@ export default function expressConfig(app) {
       parameterLimit: 50000,
     })
   );
+
+  app.use(express.json({ limit: "15mb" }));
+  app.use(express.urlencoded({ extended: true, limit: "15mb" }));
+  app.use("/assets", express.static(path.join(process.cwd(), "assets")));
+
 
   app.use(morgan("combined"));
 }

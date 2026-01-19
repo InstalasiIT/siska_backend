@@ -1,0 +1,12 @@
+### Test endpoint Datatable Laporan
+POST http://localhost:6357/rekap/get-data/1/10
+Content-Type: application/json
+Accept: application/json
+
+{
+    "q": "",
+    "sort":{
+        "kolom":"nama",
+        "direction":"asc"
+    }
+}

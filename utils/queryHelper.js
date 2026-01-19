@@ -69,6 +69,8 @@ export default class queryHelper {
   }
 
   async insert(options = {}) {
+
+    console.log(options)
     const data = options.replacements;
 
     const keys = Object.keys(data);

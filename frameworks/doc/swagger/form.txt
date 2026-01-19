@@ -1,0 +1,74 @@
+/**
+ * @swagger
+ * tags:
+ *   - name: form
+ *     description: API untuk form
+ */
+
+ 
+/**
+ * @swagger
+ * /naik-kelas/get-pasien/{no_bpjs}:
+ *   get:
+ *     summary: Ambil pasien bpjs
+ *     tags: [form]
+ *     parameters:
+ *       - in: path
+ *         name: no_bpjs
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Example Berhasil
+ */
+
+ 
+/**
+ * @swagger
+ * /naik-kelas/get-kelas:
+ *   get:
+ *     summary: ambil kelas di evo
+ *     tags: [form]
+ *     responses:
+ *       200:
+ *         description: Example Berhasil
+ */
+
+/**
+ * @swagger
+ * /rekap/get-data/{page}/{rows}:
+ *   post:
+ *     summary: Mendapatkan jenis kendaraan dalam bentuk datatable
+ *     tags: [form]
+ *     parameters:
+ *       - in: path
+ *         name: page
+ *         required: true
+ *         schema:
+ *           type: integer
+ *       - in: path
+ *         name: rows
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: false
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               q:
+ *                 type: string
+ *               sort:
+ *                 type: object
+ *                 properties:
+ *                      kolom:
+ *                          type: string
+ *                      direction:
+ *                          type: string
+ *     responses:
+ *       200:
+ *         description: Example Berhasil
+ */

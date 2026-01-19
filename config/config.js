@@ -18,6 +18,22 @@ export default {
     name: process.env.DB_NAME,
   },
 
+  app_db_evo: {
+    host: process.env.DB_HOST_EVO,
+    port: process.env.DB_PORT_EVO,
+    user: process.env.DB_USER_EVO,
+    pass: process.env.DB_PASS_EVO,
+    name: process.env.DB_NAME_EVO,
+  },
+
+  app_db_mysyamrabu: {
+    host: process.env.DB_HOST_MYSYAMRABU,
+    port: process.env.DB_PORT_MYSYAMRABU,
+    user: process.env.DB_USER_MYSYAMRABU,
+    pass: process.env.DB_PASS_MYSYAMRABU,
+    name: process.env.DB_NAME_MYSYAMRABU,
+  },
+
   mongo: {
     host: process.env.MONGO_HOST,
     port: parseInt(process.env.MONGO_PORT) || 27017,
