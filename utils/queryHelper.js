@@ -68,6 +68,21 @@ export default class queryHelper {
     });
   }
 
+  async delete(options = {}) {
+    const replacements = options.replacements || {};
+
+    const query = `
+      DELETE FROM ${options.table}
+      WHERE id = :id
+    `;
+
+    return await this.db.query(query, {
+      replacements: replacements,
+      type: this.db.QueryTypes.DELETE,
+      transaction: options.t || null,
+    });
+  }
+
   async insert(options = {}) {
 
     console.log(options)

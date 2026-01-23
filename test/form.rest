@@ -14,11 +14,12 @@ Content-Type: application/json
 Accept: application/json
 
 {
-"no_bpjs":"0000173958726",
-"nama" : "nfgg",
-"tempat_lahir": "Bangkalan",
-"tanggal_lahir":"2025-12-01",
+"no_rm":"0000173958726",
+"nama" : "cekcobarevisi",
+"tempat_lahir":"jkt",
+"tanggal_lahir":"1990-01-01",
 "alamat" : "klgh",
+"umur": 25,
 "hp":"785484",
 "hubungan":"mnbn",
 "kelas_sebelumnya":"vip",
@@ -44,9 +45,10 @@ Accept: application/json
 
 {
 "no_rm":"0000173958726",
-"nama" : "nfgg",
-"tempat_lahir": "Bangkalan",
-"tanggal_lahir":"2025-12-01",
+"nama" : "cekcobarevisi",
+"tempat_lahir":"jkt",
+"tanggal_lahir":"1990-01-01",
+"umur" : "23",
 "alamat" : "klgh",
 "hp":"785484",
 "hubungan":"mnbn",

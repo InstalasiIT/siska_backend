@@ -27,6 +27,26 @@ export default class formService {
     };
   }
 
+  async getDataPasien(nomor) {
+    const pasien = await this.db_evo.select({
+      query: `SELECT a.no_medicalrecord,p.nama_pasien,p.tempat_lahir,p.tanggal_lahir,p.no_bpjs,p.alamat,
+          	cast(a.tgl_masuk as date) as tgl_masuk,
+						cast(a.tgl_keluar as date) as tgl_keluar,
+						CAST ( A.tgl_keluar_rm AS DATE ) AS tgl_keluar_rm,
+						a.NO_REGISTRASIKUNJUNGAN
+            from kunjungan a
+            inner join transaksi e on e.no_registrasikunjungan = a.no_registrasikunjungan
+						left join pasien p on p.no_medicalrecord = a.no_medicalrecord
+            where 1=1 and substr(e.no_transaksi,1,2) in ('01', '02', '03','04','07','06') and (A .STATUS = 0 or a.status is null) and (p.no_medicalrecord = :nomor or p.no_bpjs = :nomor) and a.tgl_keluar_rm is null and a.tgl_keluar is null group by a.no_medicalrecord,a.tgl_masuk,a.tgl_keluar,a.no_registrasikunjungan,p.nama_pasien,p.tempat_lahir,p.tanggal_lahir,p.no_bpjs,p.alamat`,
+      replacements: { nomor },
+      softDelete: false,
+    });
+
+    return {
+      data: pasien,
+    };
+  }
+
   async kelas() {
     const dataKelas = await this.db_evo.select({
       query: `select rp.kd_ruangperawatan, rp.nama_ruangperawatan, kp.kd_kelasperawatan, kp.nama_kelasperawatan, kmp.kd_kamarperawatan, kmp.nama_kamarperawatan, dk.status
@@ -91,7 +111,7 @@ export default class formService {
 
   async saveNaikKelas(
     id_user,
-    no_bpjs,
+    no_rm,
     nama,
     tempat_lahir,
     tanggal_lahir,
@@ -109,13 +129,12 @@ export default class formService {
     path_ttd_petugas,
     nama_petugas,
     no_hp,
-    hubungan
+    hubungan,
   ) {
-
-    try{
-
+    try {
       const uuid = uuidv4();
-  
+      console.log(uuid);
+
       const date = await this.CommonFunction.getNowDate();
       await this.db.insert({
         table: "history_naik_kelas",
@@ -125,7 +144,7 @@ export default class formService {
           nama: nama,
           tempat_lahir: tempat_lahir,
           tanggal_lahir: tanggal_lahir,
-          no_bpjs: no_bpjs,
+          no_rm: no_rm,
           alamat: alamat,
           kelas_sebelumnya: kelas_sebelumnya,
           kelas_setelahnya: kelas_setelahnya,
@@ -144,9 +163,9 @@ export default class formService {
           created_at: date,
         },
       });
-  
+
       return true;
-    }catch(error){
+    } catch (error) {
       console.log(error.message);
       return false;
     }
@@ -174,7 +193,7 @@ export default class formService {
     path_ttd_petugas,
     nama_petugas,
     no_hp,
-    hubungan
+    hubungan,
   ) {
     const uuid = uuidv4();
 

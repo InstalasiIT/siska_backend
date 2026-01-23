@@ -8,9 +8,14 @@ export default function userRoute() {
   const formRoutes = express.Router();
 
   formRoutes.get(
-    "/naik-kelas/get-pasien/:no_bpjs",
+    "/naik-kelas/get-datapasien/:no_bpjs",
     authMiddleware,
     controller.getPasien()
+  );
+  formRoutes.get(
+    "/naik-kelas/get-pasien/:no_bpjs",
+    authMiddleware,
+    controller.getDataPasien(),
   );
   formRoutes.get(
     "/naik-kelas/get-kelas",

@@ -10,3 +10,46 @@ Accept: application/json
         "direction":"asc"
     }
 }
+
+####
+POST http://localhost:6357/rekap/naik-kelas/1/10
+Content-Type: application/json
+Accept: application/json
+
+{
+    "q": "",
+    "sort":{
+        "kolom":"nama",
+        "direction":"asc"
+    }
+}
+
+####
+DELETE http://localhost:6357/rekap/naik-kelas/2
+Content-Type: application/json
+Accept: application/json
+
+
+####
+PUT http://localhost:6357/rekap/naik-kelas
+Content-Type: application/json
+    Accept: application/json
+
+{
+    "id": 37,
+    "kelas_sebelumnya":"kelas1",
+    "kelas_setelahnya":"vip"
+}
+
+####
+PUT http://localhost:6357/rekap/kelas-full
+Content-Type: application/json
+Accept: application/json
+
+{
+    "id": 15,
+    "kelas_sebelumnya":"vip",
+    "kelas_setelahnya":"kelas1",
+    "ruang_sebelumnya":"vip",
+    "ruang_setelahnya":"kelas1"
+}

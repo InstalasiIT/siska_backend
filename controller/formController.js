@@ -11,7 +11,6 @@ export default class formController {
     this.services = new formService();
   }
 
-  
   formatRM(value) {
     const hurufAngka = /^([A-Z]+)(\d+)$/i;
     const match = value.match(hurufAngka);
@@ -40,13 +39,10 @@ export default class formController {
     return value;
   }
 
-
   getPasien() {
     return async (req, res, next) => {
       try {
         const no_bpjs = String(req.params.no_bpjs || "");
-
-        console.log(no_bpjs.length);
 
         let bpjs = no_bpjs;
         if (no_bpjs.length < 10) {
@@ -54,6 +50,24 @@ export default class formController {
         }
 
         const results = await this.services.pasienByNoBpjs(bpjs);
+        response(200, "success", results, res);
+      } catch (error) {
+        response(500, "error", error.message, res);
+      }
+    };
+  }
+
+  getDataPasien() {
+    return async (req, res, next) => {
+      try {
+        const no_bpjs = String(req.params.no_bpjs || "");
+
+        let bpjs = no_bpjs;
+        if (no_bpjs.length < 10) {
+          bpjs = this.formatRM(no_bpjs);
+        }
+
+        const results = await this.services.getDataPasien(bpjs);
         response(200, "success", results, res);
       } catch (error) {
         response(500, "error", error.message, res);
@@ -83,7 +97,6 @@ export default class formController {
   }
 
   async uploadImage(image) {
-    
     const matches = image.match(/^data:(.+);base64,(.+)$/);
 
     if (!matches || matches.length !== 3) {
@@ -92,7 +105,7 @@ export default class formController {
 
     const mimeType = matches[1];
     let base64Data = matches[2].replace(/\s/g, "");
-    
+
     const sizeInMB = (base64Data.length * 3) / 4 / 1024 / 1024;
     if (sizeInMB > 10) {
       throw new Error("Ukuran gambar maksimal 10MB");
@@ -102,7 +115,7 @@ export default class formController {
     if (ext === "jpeg") ext = "jpg";
 
     const fileName = `image_${Date.now()}.${ext}`;
-    
+
     const { year, month, day } = await this.getYMD();
 
     const baseDir = path.resolve(
@@ -110,7 +123,7 @@ export default class formController {
       "images",
       String(year),
       String(month),
-      String(day)
+      String(day),
     );
 
     fs.mkdirSync(baseDir, { recursive: true });
@@ -123,11 +136,15 @@ export default class formController {
   save() {
     return async (req, res, next) => {
       try {
-        let no_bpjs = req.body.no_bpjs;
+        let no_bpjs = req.body.no_rm;
+        let no_rm = no_bpjs;
+        if (no_bpjs.length < 10) {
+          no_rm = this.formatRM(no_bpjs);
+        }
         let nama = req.body.nama;
+        let alamat = req.body.alamat;
         let tempat_lahir = req.body.tempat_lahir;
         let tanggal_lahir = req.body.tanggal_lahir;
-        let alamat = req.body.alamat;
         let kelas_sebelumnya = req.body.kelas_sebelumnya;
         let kelas_setelahnya = req.body.kelas_setelahnya;
         let saksi = req.body.saksi;
@@ -135,8 +152,9 @@ export default class formController {
         let ttd_petugas = req.body.ttd_petugas;
         let no_hp = req.body.hp;
         let hubungan = req.body.hubungan;
-        
-        let path_ttd_saksi =await this.uploadImage(saksi.ttd);
+        // let umur = req.body.umur;
+
+        let path_ttd_saksi = await this.uploadImage(saksi.ttd);
         let path_ttd_keluarga = await this.uploadImage(keluarga_pasien.ttd);
         let path_ttd_petugas = await this.uploadImage(ttd_petugas);
 
@@ -145,7 +163,7 @@ export default class formController {
 
         let cek = await this.services.cekUser(username, password);
 
-        let pasien = await this.services.pasienByNoBpjs(no_bpjs);
+        let pasien = await this.services.pasienByNoBpjs(no_rm);
         pasien = pasien.data[0];
 
         if (Object.keys(cek.data).length > 0) {
@@ -154,7 +172,7 @@ export default class formController {
 
           const results = this.services.saveNaikKelas(
             id_user,
-            no_bpjs,
+            pasien.no_medicalrecord,
             nama,
             tempat_lahir,
             tanggal_lahir,
@@ -172,7 +190,7 @@ export default class formController {
             path_ttd_petugas,
             nama_petugas,
             no_hp,
-            hubungan
+            hubungan,
           );
 
           response(200, "success", results, res);
@@ -188,11 +206,15 @@ export default class formController {
   saveKelasPenuh() {
     return async (req, res, next) => {
       try {
-        let no_rm = req.body.no_rm;
+        let no_bpjs = req.body.no_rm;
+        let no_rm = no_bpjs;
+        if (no_bpjs.length < 10) {
+          no_rm = this.formatRM(no_bpjs);
+        }
         let nama = req.body.nama;
+        let alamat = req.body.alamat;
         let tempat_lahir = req.body.tempat_lahir;
         let tanggal_lahir = req.body.tanggal_lahir;
-        let alamat = req.body.alamat;
         let kelas_sebelumnya = req.body.kelas_sebelumnya;
         let kelas_setelahnya = req.body.kelas_setelahnya;
         let ruang_sebelumnya = req.body.ruang_sebelumnya;
@@ -202,8 +224,9 @@ export default class formController {
         let ttd_petugas = req.body.ttd_petugas;
         let no_hp = req.body.hp;
         let hubungan = req.body.hubungan;
-        
-        let path_ttd_saksi =await this.uploadImage(saksi.ttd);
+        // let umur = req.body.umur;
+
+        let path_ttd_saksi = await this.uploadImage(saksi.ttd);
         let path_ttd_keluarga = await this.uploadImage(keluarga_pasien.ttd);
         let path_ttd_petugas = await this.uploadImage(ttd_petugas);
 
@@ -220,7 +243,7 @@ export default class formController {
           const nama_petugas = cek.data.nama;
           const results = await this.services.saveKelasPenuh(
             id_user,
-            no_rm,
+            pasien.no_medicalrecord,
             nama,
             tempat_lahir,
             tanggal_lahir,
@@ -240,7 +263,7 @@ export default class formController {
             path_ttd_petugas,
             nama_petugas,
             no_hp,
-            hubungan
+            hubungan,
           );
           response(200, "success", results, res);
         } else {

@@ -25,7 +25,7 @@ export default function expressConfig(app) {
         "http://127.0.0.1",
         "http://127.0.0.1:3000",
         "http://172.16.32.11",
-        "http://172.16.32.98",
+        "http://192.168.114.27",
         "http://172.16.32.150",
         "http://172.16.32.67",
       ];
