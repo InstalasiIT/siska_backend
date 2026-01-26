@@ -1,10 +1,10 @@
 import queryHelper from "../utils/queryHelper.js";
-import connection from "../frameworks/database/postgress/connection.js";
+import connection_mysyamrabu from "../frameworks/database/postgress/connection_mysyamrabu.js";
 import JWTService from "../frameworks/services/JWTService.js";
 
 const jwtService = new JWTService();
 
-const db = new queryHelper(connection.sequelize);
+const db = new queryHelper(connection_mysyamrabu.sequelize);
 
 const authMiddleware = async (req, res, next) => {
   try {
