@@ -49,6 +49,20 @@ export default class formService {
 
   async kelas() {
     const dataKelas = await this.db_evo.select({
+      query: `select distinct on (nama_ruangperawatan) kd_ruangperawatan, nama_ruangperawatan as nama
+      from ruang_perawatan where nama_ruangperawatan != '-' and nama_ruangperawatan != '1'`,
+      replacements: {},
+      softDelete: false,
+    });
+
+
+    return {
+      data: dataKelas,
+    };
+  }
+
+  async getkelas() {
+    const dataKelas = await this.db_evo.select({
       query: `select rp.kd_ruangperawatan, rp.nama_ruangperawatan, kp.kd_kelasperawatan, kp.nama_kelasperawatan, kmp.kd_kamarperawatan, kmp.nama_kamarperawatan, dk.status
       from ruang_perawatan rp left join kelas_perawatan kp on rp.kd_kelasperawatan = kp.kd_kelasperawatan left join kamar_perawatan kmp on rp.kd_ruangperawatan = kmp.kd_ruangperawatan left join detail_kamarperawatan dk on dk.kd_kamarperawatan = kmp.kd_kamarperawatan where dk.status = '0'`,
       replacements: {},
@@ -59,6 +73,7 @@ export default class formService {
       kd_ruangperawatan: item.kd_ruangperawatan,
       kd_kelasperawatan: item.kd_kelasperawatan,
       kd_kamarperawatan: item.kd_kamarperawatan,
+      ruang_pilihan: `${item.nama_ruangperawatan}`,
       nama: `${item.nama_ruangperawatan} (${item.nama_kamarperawatan}) - ${item.nama_kelasperawatan}`,
       status: item.status,
     }));
@@ -71,7 +86,7 @@ export default class formService {
   async cekUser(username, password) {
     try {
       const user = await this.db_syamrabu.select({
-        query: `select u.id, u.username, u.password, p.nama from users u left join pegawai p on p.id = u.id_pegawai where username = :username `,
+        query: `select u.id, u.username, u.password, p.nama from users u left join pegawai p on p.id = u.id_pegawai left join user_aplikasi ua on ua.id_user = u.id where username = :username and ua.id_aplikasi = 5`,
         replacements: { username },
         softDelete: false,
       });
@@ -83,6 +98,8 @@ export default class formService {
             data: user[0],
           };
         }
+      }else{
+        return false
       }
     } catch (error) {
       console.log(error.message);
