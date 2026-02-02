@@ -9,6 +9,7 @@ const db = new queryHelper(connection_mysyamrabu.sequelize);
 const authMiddleware = async (req, res, next) => {
   try {
     let token = req.cookies[`Backend-Syamrabu-token_auth`];
+    
     try {
       let decoded = await jwtService.verifyAccessToken(token);
       req.user = decoded;
