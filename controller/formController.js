@@ -129,7 +129,8 @@ export default class formController {
     const savePath = path.join(baseDir, fileName);
     fs.writeFileSync(savePath, Buffer.from(base64Data, "base64"));
 
-    return savePath.split("\\siska_backend\\")[1];
+    // return savePath.split("\\siska_backend\\")[1];
+    return `assets/images/${year}/${month}/${day}/${fileName}`;
   }
 
   save() {
