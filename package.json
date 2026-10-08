@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "server": "nodemon index.js",
-    "start": "NODE_OPTIONS='--max-old-space-size=4096' node index.js",
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "makeEndPoint": "node utils/makeEndPoint.mjs",
     "generateEndPoint": "node generateEndpoint.js"

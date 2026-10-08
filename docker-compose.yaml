@@ -1,0 +1,10 @@
+version: "3.8"
+
+services:
+  app:
+    build: .
+    image: siska-backend
+    container_name: siska-backend-app
+    ports:
+      - "6358:6357"
+    command: npm start

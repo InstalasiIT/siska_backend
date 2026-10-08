@@ -6,7 +6,6 @@ import path from "path";
 import { randomUUID } from "crypto";
 import multer from "multer";
 
-
 export default class formController {
   constructor() {
     this.services = new formService();
@@ -131,7 +130,8 @@ export default class formController {
     const savePath = path.join(baseDir, fileName);
     fs.writeFileSync(savePath, Buffer.from(base64Data, "base64"));
 
-    return savePath.split("\\siska_backend\\")[1];
+    // return savePath.split("\\siska_backend\\")[1];
+    return `assets/images/${year}/${month}/${day}/${fileName}`;
   }
 
   save() {
@@ -155,6 +155,11 @@ export default class formController {
         let hubungan = req.body.hubungan;
         // let umur = req.body.umur;
 
+        let nama_pasien = req.body.nama_pasien;
+        let tempat_lahir_pasien = req.body.tempat_lahir_pasien;
+        let tanggal_lahir_pasien = req.body.tanggal_lahir_pasien;
+        let alamat_pasien = req.body.alamat_pasien;
+
         let path_ttd_saksi = await this.uploadImage(saksi.ttd);
         let path_ttd_keluarga = await this.uploadImage(keluarga_pasien.ttd);
         let path_ttd_petugas = await this.uploadImage(ttd_petugas);
@@ -164,8 +169,8 @@ export default class formController {
 
         let cek = await this.services.cekUser(username, password);
 
-        let pasien = await this.services.pasienByNoBpjs(no_rm);
-        pasien = pasien.data[0];
+        // let pasien = await this.services.pasienByNoBpjs(no_rm);
+        // pasien = pasien.data[0];
 
         if (Object.keys(cek.data).length > 0) {
           const id_user = cek.data.id;
@@ -173,17 +178,17 @@ export default class formController {
 
           const results = this.services.saveNaikKelas(
             id_user,
-            pasien.no_medicalrecord,
+            no_rm,
             nama,
             tempat_lahir,
             tanggal_lahir,
             alamat,
             kelas_sebelumnya,
             kelas_setelahnya,
-            pasien.nama_pasien,
-            pasien.tempat_lahir,
-            pasien.tanggal_lahir,
-            pasien.alamat,
+            nama_pasien,
+            tempat_lahir_pasien,
+            tanggal_lahir_pasien,
+            alamat_pasien,
             saksi.nama,
             path_ttd_saksi,
             keluarga_pasien.nama,
@@ -225,6 +230,10 @@ export default class formController {
         let ttd_petugas = req.body.ttd_petugas;
         let no_hp = req.body.hp;
         let hubungan = req.body.hubungan;
+        let nama_pasien = req.body.nama_pasien;
+        let tempat_lahir_pasien = req.body.tempat_lahir_pasien;
+        let tanggal_lahir_pasien = req.body.tanggal_lahir_pasien;
+        let alamat_pasien = req.body.alamat_pasien;
         // let umur = req.body.umur;
 
         let path_ttd_saksi = await this.uploadImage(saksi.ttd);
@@ -236,15 +245,12 @@ export default class formController {
 
         let cek = await this.services.cekUser(username, password);
 
-        let pasien = await this.services.pasienByNoBpjs(no_rm);
-        pasien = pasien.data[0];
-
         if (Object.keys(cek.data).length > 0) {
           const id_user = cek.data.id;
           const nama_petugas = cek.data.nama;
           const results = await this.services.saveKelasPenuh(
             id_user,
-            pasien.no_medicalrecord,
+            no_rm,
             nama,
             tempat_lahir,
             tanggal_lahir,
@@ -253,10 +259,10 @@ export default class formController {
             kelas_setelahnya,
             ruang_sebelumnya,
             ruang_setelahnya,
-            pasien.nama_pasien,
-            pasien.tempat_lahir,
-            pasien.tanggal_lahir,
-            pasien.alamat,
+            nama_pasien,
+            tempat_lahir_pasien,
+            tanggal_lahir_pasien,
+            alamat_pasien,
             saksi.nama,
             path_ttd_saksi,
             keluarga_pasien.nama,
@@ -266,6 +272,8 @@ export default class formController {
             no_hp,
             hubungan,
           );
+
+          console.log(results);
           response(200, "success", results, res);
         } else {
           response(500, "GAGAL", cek, res);
@@ -276,4 +284,3 @@ export default class formController {
     };
   }
 }
-
