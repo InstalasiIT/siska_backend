@@ -3,6 +3,7 @@ import formService from "../application/services/formService.js";
 import response from "../utils/response.js";
 import fs from "fs";
 import path from "path";
+import { randomUUID } from "crypto";
 import multer from "multer";
 
 
@@ -97,10 +98,10 @@ export default class formController {
   }
 
   async uploadImage(image) {
-    const matches = image.match(/^data:(.+);base64,(.+)$/);
+    const matches = typeof image === "string" && image.match(/^data:(.+);base64,(.+)$/);
 
     if (!matches || matches.length !== 3) {
-      return "Gambar tidak valid";
+      throw new Error("Gambar tidak valid");
     }
 
     const mimeType = matches[1];
@@ -114,7 +115,7 @@ export default class formController {
     let ext = mimeType.split("/")[1].toLowerCase();
     if (ext === "jpeg") ext = "jpg";
 
-    const fileName = `image_${Date.now()}.${ext}`;
+    const fileName = `image_${randomUUID()}.${ext}`;
 
     const { year, month, day } = await this.getYMD();
 
