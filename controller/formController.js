@@ -60,7 +60,13 @@ export default class formController {
   getDataPasien() {
     return async (req, res, next) => {
       try {
-        const no_bpjs = String(req.params.no_bpjs || "");
+        const nomer = String(req.params.no_bpjs || "").replace(/\D/g, "");
+
+        const no_bpjs = nomer
+          ? nomer
+              .padStart(6, "0")
+              .replace(/(\d)(\d{2})(\d{2})(\d{2})$/, "$1-$2-$3-$4")
+          : "";
 
         let bpjs = no_bpjs;
         if (no_bpjs.length < 10) {
@@ -97,7 +103,8 @@ export default class formController {
   }
 
   async uploadImage(image) {
-    const matches = typeof image === "string" && image.match(/^data:(.+);base64,(.+)$/);
+    const matches =
+      typeof image === "string" && image.match(/^data:(.+);base64,(.+)$/);
 
     if (!matches || matches.length !== 3) {
       throw new Error("Gambar tidak valid");
