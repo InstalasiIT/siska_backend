@@ -12,41 +12,39 @@ export default class formController {
   }
 
   formatRM(value) {
-    const hurufAngka = /^([A-Z]+)(\d+)$/i;
-    const match = value.match(hurufAngka);
+    const nomer = String(value).trim().toUpperCase();
+
+    // Format RM dengan prefix huruf, contoh ABC123
+    const hurufAngka = /^([A-Z]+)(\d+)$/;
+    const match = nomer.match(hurufAngka);
 
     if (match) {
       return `${match[1]}-${match[2]}`;
     }
 
-    // jika hanya angka
-    if (/^\d+$/.test(value)) {
-      const result = [];
-      let s = value;
+    // Format RM numerik
+    if (/^\d+$/.test(nomer)) {
+      // Tambahkan angka 0 di depan hingga 7 digit
+      const padded = nomer.padStart(7, "0");
 
-      while (s.length > 2) {
-        result.unshift(s.slice(-2));
-        s = s.slice(0, -2);
-      }
-
-      if (s.length > 0) {
-        result.unshift(s);
-      }
-
-      return result.join("-");
+      // Format menjadi 0-00-00-00
+      return `${padded[0]}-${padded.slice(1, 3)}-${padded.slice(3, 5)}-${padded.slice(5, 7)}`;
     }
 
-    return value;
+    return nomer;
   }
 
   getPasien() {
     return async (req, res, next) => {
       try {
-        const no_bpjs = String(req.params.no_bpjs || "");
+        const nomer = String(req.params.no_bpjs || "").trim();
 
-        let bpjs = no_bpjs;
-        if (no_bpjs.length < 10) {
-          bpjs = this.formatRM(no_bpjs);
+        let bpjs = nomer;
+
+        // Jika kurang dari 10 digit atau mengandung huruf,
+        // maka dianggap sebagai nomor RM
+        if (/^[A-Z]+\d+$/i.test(nomer) || /^\d{1,9}$/.test(nomer)) {
+          bpjs = this.formatRM(nomer);
         }
 
         const results = await this.services.pasienByNoBpjs(bpjs);
@@ -60,20 +58,16 @@ export default class formController {
   getDataPasien() {
     return async (req, res, next) => {
       try {
-        const nomer = String(req.params.no_bpjs || "").replace(/\D/g, "");
+        const nomer = String(req.params.no_bpjs || "").trim();
 
-        const no_bpjs = nomer
-          ? nomer
-              .padStart(7, "0")
-              .replace(/(\d)(\d{2})(\d{2})(\d{2})$/, "$1-$2-$3-$4")
-          : "";
+        let bpjs = nomer;
 
-        let bpjs = no_bpjs;
-        if (no_bpjs.length < 10) {
-          bpjs = this.formatRM(no_bpjs);
+        if (/^[A-Z]+\d+$/i.test(nomer) || /^\d{1,9}$/.test(nomer)) {
+          bpjs = this.formatRM(nomer);
         }
 
         const results = await this.services.getDataPasien(bpjs);
+
         response(200, "success", results, res);
       } catch (error) {
         response(500, "error", error.message, res);
